@@ -1,0 +1,32 @@
+{
+  "name": "tslint-webpack-plugin",
+  "version": "0.1.0",
+  "description": "TSLint plugin for Webpack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jrparish@github.com/jrparish/tslint-webpack-plugin.git"
+  },
+  "keywords": [
+    "webpack",
+    "tslint",
+    "typescript",
+    "plugin",
+    "linting"
+  ],
+  "author": "Jacob Parish",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jrparish/tslint-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/jrparish/tslint-webpack-plugin",
+  "peerDependencies": {
+    "tslint": "^4.0.0"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
