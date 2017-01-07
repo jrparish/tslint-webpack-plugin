@@ -1,13 +1,13 @@
 # tslint-webpack-plugin
 
-[![npm version](https://badge.fury.io/js/tslint-webpack-plugin.svg)](http://badge.fury.io/js/html-webpack-plugin)
+[![npm version](https://badge.fury.io/js/tslint-webpack-plugin.svg)](http://badge.fury.io/js/tslint-webpack-plugin)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 
-[![NPM](https://nodei.co/npm/tslint-webpack-plugin.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/html-webpack-plugin/)
+[![NPM](https://nodei.co/npm/tslint-webpack-plugin.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/tslint-webpack-plugin/)
 
 This is a [webpack](http://webpack.github.io/) plugin that provides a very simple method of running TSLint alongside your webpack builds.
-This project differs from [tslint-loader](https://github.com/wbuchwalter/tslint-loader) in that it will lint all specified files rather that only
-those that are imported by webpack. This is espcially useful for interface files that are not always picked up by webpack (due to treeshaking or whatever).
+This project differs from [tslint-loader](https://github.com/wbuchwalter/tslint-loader) in that it will lint all specified files instead of only
+those that are imported by webpack. This is especially useful for interface files that are not always picked up by webpack (due to treeshaking or whatever).
 
 Installation
 ------------
@@ -55,4 +55,4 @@ Allowed values are as follows:
 
 # License
 
-This project is licensed under [MIT](https://github.com/ampedandwired/html-webpack-plugin/blob/master/LICENSE).
+This project is licensed under [MIT](https://github.com/jrparish/tslint-webpack-plugin/blob/master/LICENSE).
