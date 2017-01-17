@@ -2,7 +2,7 @@ const { Runner } = require('tslint/lib/runner');
 const path = require('path');
 const chalk = require('chalk');
 
-process.stdout.write(chalk.cyan('\n[tslint-plugin] Starting linter in separate process...\n'));
+process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
 let files = process.argv[2] || [];
 
@@ -22,6 +22,6 @@ const runner = new Runner({
 }, process.stdout);
 
 runner.run(() => {
-  process.stdout.write(chalk.green('\n[tslint-plugin] Linting complete.\n\n'));
+  process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
   process.exit();
 });
