@@ -23,7 +23,7 @@ const Formatter = (function Formatter(_super) {
 
       return `${sameAsPrevFile ? '' : `\n${chalk.yellow.bold(fileName)}\n`}` +
         `${positionTuple}: ` +
-        `${chalk.cyan(failureString)}`;
+        `${chalk.yellow.dim(failureString)}`;
     });
 
     return `${outputLines.join('\n')}\n\n`;
