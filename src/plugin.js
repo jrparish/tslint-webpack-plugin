@@ -11,7 +11,11 @@ function apply(options, compiler) {
       return;
     }
 
-    fork(path.resolve(__dirname, 'linter.js'), [files]);
+    if (!Array.isArray(files)) {
+      files = [files];
+    }
+
+    fork(path.resolve(__dirname, 'linter.js'), [ JSON.stringify(files) ]);
   });
 }
 

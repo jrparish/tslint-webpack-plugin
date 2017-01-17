@@ -26,7 +26,7 @@ const Formatter = (function Formatter(_super) {
         `${chalk.yellow.dim(failureString)}`;
     });
 
-    return `${outputLines.join('\n')}\n\n`;
+    return outputLines.length ? `${outputLines.join('\n')}\n\n` : '';
   };
 
   return Formatter;

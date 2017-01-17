@@ -4,15 +4,11 @@ const chalk = require('chalk');
 
 process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
-let files = process.argv[2] || [];
+const files = JSON.parse(process.argv[2]) || [];
 
 if (!files.length) {
   process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] Incorrect `files` argument.\n\n'));
   process.exit();
-}
-
-if (!Array.isArray(files)) {
-  files = [files];
 }
 
 const runner = new Runner({
