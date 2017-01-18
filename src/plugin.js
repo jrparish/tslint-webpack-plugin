@@ -3,6 +3,15 @@ const chalk = require('chalk');
 const { fork } = require('child_process');
 
 function apply(options, compiler) {
+  let linterProcess;
+
+  compiler.plugin('compile', function () {
+    if (linterProcess && linterProcess.kill) {
+      // Exits any outstanding child process if one exists
+      linterProcess.kill();
+    }
+  });
+
   compiler.plugin('done', function () {
     let { files = [] } = options;
 
@@ -15,7 +24,11 @@ function apply(options, compiler) {
       files = [files];
     }
 
-    fork(path.resolve(__dirname, 'linter.js'), [ JSON.stringify(files) ]);
+    // Spawn a child process to run the linter
+    linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(files)]);
+
+    // Clean up the linterProcess when finished
+    linterProcess.once('exit', () => delete linterProcess);
   });
 }
 
