@@ -4,18 +4,19 @@ const chalk = require('chalk');
 
 process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
-const files = JSON.parse(process.argv[2]) || [];
+const options = JSON.parse(process.argv[2]) || {};
 
-if (!files.length) {
+if (!options.files.length) {
   process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] Incorrect `files` argument.\n\n'));
   process.exit();
 }
 
-const runner = new Runner({
-  files,
+const runnerOptions = Object.assign({
   format: 'custom',
   formattersDirectory: path.join(__dirname, 'formatters')
-}, process.stdout);
+}, options);
+
+const runner = new Runner(runnerOptions, process.stdout);
 
 runner.run(() => {
   process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
