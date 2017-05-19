@@ -20,12 +20,10 @@ function apply(options, compiler) {
       return;
     }
 
-    if (!Array.isArray(files)) {
-      files = [files];
-    }
+    options.files = Array.isArray(files) ? files : [files];
 
     // Spawn a child process to run the linter
-    linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(files)]);
+    linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(options)]);
 
     // Clean up the linterProcess when finished
     linterProcess.once('exit', () => delete linterProcess);
