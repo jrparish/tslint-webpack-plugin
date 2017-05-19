@@ -43,7 +43,8 @@ var webpackConfig = {
 Configuration
 -------------
 You can pass a hash of configuration options to `TSLintWebpackPlugin`.
-Allowed values are as follows:
+
+The basic configuration requires the following:
 
 - `files`: `string | string[]` The files to run through the linter.
   - Examples
@@ -51,6 +52,8 @@ Allowed values are as follows:
     - `['./src/**/*.ts', './test/**/*.spec.ts']`
     - `'./src/main.ts'`
     - `['./src/main.ts', './test/main.spec.ts']`
+
+For advanced usage, see the various runner options [here](https://github.com/palantir/tslint/blob/master/src/runner.ts).
 
 
 # License
