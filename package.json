@@ -1,6 +1,6 @@
 {
   "name": "tslint-webpack-plugin",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "TSLint plugin for Webpack",
   "main": "index.js",
   "scripts": {
