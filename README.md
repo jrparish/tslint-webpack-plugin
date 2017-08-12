@@ -53,6 +53,12 @@ The basic configuration requires the following:
     - `'./src/main.ts'`
     - `['./src/main.ts', './test/main.spec.ts']`
 
+The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used.
+- `format`: `string`
+  - Examples
+    - `stylish`
+    - [More supported formats](https://palantir.github.io/tslint/formatters/)
+
 For advanced usage, see the various runner options [here](https://github.com/palantir/tslint/blob/master/src/runner.ts).
 
 

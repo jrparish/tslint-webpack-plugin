@@ -30,7 +30,7 @@ if (!options.files.length) {
 }
 
 const runnerOptions = Object.assign({
-  format: 'custom',
+  format: options.format || 'webpackPluginCustom',
   formattersDirectory: path.join(__dirname, 'formatters')
 }, options);
 
