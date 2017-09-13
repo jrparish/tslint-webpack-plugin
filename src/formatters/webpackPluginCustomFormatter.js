@@ -5,6 +5,7 @@ const Formatter = (function Formatter(_super) {
 
   Object.assign(Formatter, _super);
 
+  // eslint-disable-next-line
   function Formatter(...args) {
     _super.apply(this, args);
   }
@@ -12,7 +13,7 @@ const Formatter = (function Formatter(_super) {
   Formatter.prototype.format = function format(failures) {
     let previousFileName;
 
-    const outputLines = failures.map(failure => {
+    const outputLines = failures.map((failure) => {
       const fileName = failure.getFileName();
       const failureString = failure.getFailure();
       const lineAndCharacter = failure.getStartPosition().getLineAndCharacter();

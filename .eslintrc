@@ -1,0 +1,6 @@
+{
+  "extends": "@d3banking/eslint-config",
+  "rules": {
+    "no-param-reassign": "off"
+  }
+}

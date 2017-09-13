@@ -1,24 +1,7 @@
-const { Runner, run } = require('tslint/lib/runner');
+const { Linter } = require('tslint');
 const path = require('path');
 const chalk = require('chalk');
-
-function runLinter(runnerOptions, stdout) {
-  if (run) {
-    const logger = {
-      log: (message) => stdout.write(message),
-      error: (message) => stdout.write(message)
-    };
-
-    return run(runnerOptions, logger);
-  } else if (Runner) {
-    return new Promise(resolve => {
-      const runner = new Runner(runnerOptions, stdout);
-      runner.run(resolve);
-    });
-  } else {
-    throw new Error('Unable to launch tslint. No suitable runner found.');
-  }
-}
+const { resolveFile, tryReadFile, resolveGlobs } = require('./utils');
 
 process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
@@ -31,11 +14,26 @@ if (!options.files.length) {
 
 const runnerOptions = Object.assign({
   format: options.format || 'webpackPluginCustom',
-  formattersDirectory: path.join(__dirname, 'formatters')
+  formattersDirectory: path.join(__dirname, 'formatters'),
+  tsConfigFile: 'tsconfig.json'
 }, options);
 
-runLinter(runnerOptions, process.stdout)
-  .then(() => {
-    process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
-    process.exit();
-  });
+let program;
+if (options.typeCheck) {
+  const tsconfigPath = resolveFile(options.tsConfigFile);
+  program = Linter.createProgram(tsconfigPath);
+}
+
+const linter = new Linter(runnerOptions, program);
+const files = resolveGlobs(options.files);
+
+files.forEach((file) => {
+  const contents = tryReadFile(file);
+  if (contents !== undefined) {
+    linter.lint(file, contents);
+  }
+});
+
+process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
+process.send(linter.getResult());
+process.exit();
