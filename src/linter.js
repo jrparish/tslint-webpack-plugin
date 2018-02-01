@@ -38,4 +38,6 @@ runLinter(runnerOptions, process.stdout)
   .then(() => {
     process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
     process.exit();
+  }).catch(error => {
+    process.stdout.write(chalk.red(`[tslint-plugin] Error starting linter: ${error}\n${error.stack}\n`));
   });
