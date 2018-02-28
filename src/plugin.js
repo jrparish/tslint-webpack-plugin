@@ -5,14 +5,14 @@ const { fork } = require('child_process');
 function apply(options, compiler) {
   let linterProcess;
 
-  compiler.hooks.compile.tap('TSLintWebpackPlugin', function () {
+  function compileHook() {
     if (linterProcess && linterProcess.kill) {
       // Exits any outstanding child process if one exists
       linterProcess.kill();
     }
-  });
+  }
 
-  compiler.hooks.done.tap('TSLintWebpackPlugin', function () {
+  function doneHook() {
     let { files = [] } = options;
 
     if (!files.length) {
@@ -27,7 +27,17 @@ function apply(options, compiler) {
 
     // Clean up the linterProcess when finished
     linterProcess.once('exit', () => delete linterProcess);
-  });
+  }
+
+  if (compiler.hooks) {
+    // Webpack 4
+    compiler.hooks.compile.tap('TSLintWebpackPlugin', compileHook);
+    compiler.hooks.done.tap('TSLintWebpackPlugin', doneHook);
+  } else {
+    // Backwards compatibility
+    compiler.plugin('compile', compileHook);
+    compiler.plugin('done', doneHook);
+  }
 }
 
 module.exports = function TSLintWebpackPlugin(options = {}) {

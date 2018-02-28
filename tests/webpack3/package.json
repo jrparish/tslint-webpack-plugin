@@ -1,5 +1,5 @@
 {
-  "name": "tslint-webpack-plugin-webpack4",
+  "name": "tslint-webpack-plugin-webpack3",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "MIT",
@@ -8,10 +8,9 @@
     "tslint": "5.9.1",
     "tslint-webpack-plugin": "file:../../",
     "typescript": "2.7.2",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9"
+    "webpack": "^3"
   },
   "scripts": {
-    "test": "webpack --mode development"
+    "test": "webpack"
   }
 }
