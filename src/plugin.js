@@ -5,14 +5,14 @@ const { fork } = require('child_process');
 function apply(options, compiler) {
   let linterProcess;
 
-  compiler.plugin('compile', function () {
+  compiler.hooks.compile.tap('TSLintWebpackPlugin', function () {
     if (linterProcess && linterProcess.kill) {
       // Exits any outstanding child process if one exists
       linterProcess.kill();
     }
   });
 
-  compiler.plugin('done', function () {
+  compiler.hooks.done.tap('TSLintWebpackPlugin', function () {
     let { files = [] } = options;
 
     if (!files.length) {

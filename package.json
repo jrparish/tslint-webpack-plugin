@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/jrparish/tslint-webpack-plugin",
   "peerDependencies": {
-    "tslint": ">= 4.0.0"
+    "tslint": ">= 4.0.0",
+    "webpack": "< 5.0.0"
   },
   "dependencies": {
     "chalk": "^2.1.0"
