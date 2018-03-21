@@ -21,6 +21,5 @@ declare namespace TslintWebpackPlugin {
     interface Options extends Omit<TslintOptions, keyof OmittedOptions> {
         files: string | string[];
         exclude?: string[];
-        format?: string;
     }
 }
