@@ -1,7 +1,13 @@
-declare module "tslint-webpack-plugin" {
-    import { Plugin } from "webpack";
-    import { Options as TslintOptions } from "tslint/lib/runner";
+import { Plugin } from "webpack";
+import { Options as TslintOptions } from "tslint/lib/runner";
 
+export = TslintWebpackPlugin;
+
+declare class TslintWebpackPlugin extends Plugin {
+    constructor(options?: TslintWebpackPlugin.Options);
+}
+
+declare namespace TslintWebpackPlugin {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/9f4c75126167d0d8af759f58405d53d983e94ad0/types/react-redux/index.d.ts#L33-L34
     type Diff<T extends string, U extends string> = ({ [P in T]: P } & { [P in U]: never } & { [x: string]: never })[T];
     type Omit<T, K extends keyof T> = Pick<T, Diff<keyof T, K>>;
@@ -17,10 +23,4 @@ declare module "tslint-webpack-plugin" {
         exclude?: string[];
         format?: string;
     }
-
-    class TslintWebpackPlugin extends Plugin {
-        constructor(options?: Options);
-    }
-
-    export = TslintWebpackPlugin;
 }
