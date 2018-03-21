@@ -1,3 +1,6 @@
+## 1.2.2
+- Fixes for Typescript typings
+
 ## 1.2.1
 - Added Typescript typings
 
