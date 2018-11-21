@@ -1,3 +1,6 @@
+## 1.3.0
+- Added silent option
+
 ## 1.2.2
 - Fixes for Typescript typings
 
