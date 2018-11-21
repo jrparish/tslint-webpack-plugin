@@ -5,7 +5,7 @@ module.exports = {
     app: './src/index.js'
   },
   output: {
-    filename: 'test.js'
+    filename: 'dist/test.js'
   },
   plugins: [
     new TSLintWebpackPlugin({ files: 'src/**/*.ts' })
