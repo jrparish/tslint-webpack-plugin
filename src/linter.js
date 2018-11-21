@@ -2,17 +2,25 @@ const { Runner, run } = require('tslint/lib/runner');
 const path = require('path');
 const chalk = require('chalk');
 
-function runLinter(runnerOptions, stdout) {
+const options = JSON.parse(process.argv[2]) || {};
+
+function log(message) {
+  if (!options.silent) {
+    process.stdout.write(message);
+  }
+}
+
+function runLinter(runnerOptions, write) {
   if (run) {
     const logger = {
-      log: (message) => stdout.write(message),
-      error: (message) => stdout.write(message)
+      log: (message) => write(message),
+      error: (message) => write(message)
     };
 
     return run(runnerOptions, logger);
   } else if (Runner) {
     return new Promise(resolve => {
-      const runner = new Runner(runnerOptions, stdout);
+      const runner = new Runner(runnerOptions, {write: write});
       runner.run(resolve);
     });
   } else {
@@ -20,12 +28,10 @@ function runLinter(runnerOptions, stdout) {
   }
 }
 
-process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
-
-const options = JSON.parse(process.argv[2]) || {};
+log(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
 if (!options.files.length) {
-  process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] Incorrect `files` argument.\n\n'));
+  log(chalk.yellow.bold('\n[tslint-plugin] Incorrect `files` argument.\n\n'));
   process.exit();
 }
 
@@ -35,10 +41,10 @@ const runnerOptions = Object.assign({
   formattersDirectory: path.join(__dirname, 'formatters')
 }, options);
 
-runLinter(runnerOptions, process.stdout)
+runLinter(runnerOptions, log)
   .then(() => {
-    process.stdout.write(chalk.green('[tslint-plugin] Linting complete.\n'));
+    log(chalk.green('[tslint-plugin] Linting complete.\n'));
     process.exit();
   }).catch(error => {
-    process.stdout.write(chalk.red(`[tslint-plugin] Error starting linter: ${error}\n${error.stack}\n`));
+    log(chalk.red(`[tslint-plugin] Error starting linter: ${error}\n${error.stack}\n`));
   });

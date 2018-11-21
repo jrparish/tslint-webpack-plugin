@@ -53,6 +53,10 @@ The basic configuration requires the following:
     - `'./src/main.ts'`
     - `['./src/main.ts', './test/main.spec.ts']`
 
+Disable console output if necessary:
+
+- `silent`: `true`
+
 The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used.
 - `format`: `string`
   - Examples
