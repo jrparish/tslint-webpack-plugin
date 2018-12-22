@@ -63,7 +63,7 @@ function apply(options, compiler) {
                   break;
                 }
                 default: {
-                  process.stderr.write(msg);
+                  process.stdout.write(msg);
                 }
               }
             } else {
