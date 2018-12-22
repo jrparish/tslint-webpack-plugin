@@ -10,9 +10,7 @@ function apply(options, compiler) {
       // Exits any outstanding child process if one exists
       linterProcess.kill();
     }
-  }
 
-  function doneHook() {
     let { files = [] } = options;
 
     if (!files.length) {
@@ -20,13 +18,23 @@ function apply(options, compiler) {
       return;
     }
 
+    process.stdout.write(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
+
     options.files = Array.isArray(files) ? files : [files];
 
     // Spawn a child process to run the linter
     linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(options)]);
 
     // Clean up the linterProcess when finished
-    linterProcess.once('exit', () => delete linterProcess);
+    linterProcess.once('exit', () => {
+      delete linterProcess;
+    });
+  }
+
+  function doneHook() {
+    if (linterProcess) {
+      linterProcess.send('flush');
+    }
   }
 
   if (compiler.hooks) {

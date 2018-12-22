@@ -10,6 +10,34 @@ function log(message) {
   }
 }
 
+const logBuffer = [];
+
+function trimEnd(value, character) {
+  while (value.slice(-1) === character) {
+    value = value.slice(0, -1);
+  }
+
+  return value;
+}
+
+function logBuffered(message) {
+  if (!options.silent) {
+    logBuffer.push(message);
+  }
+}
+
+function flushLog() {
+  for (let i = 0; i < logBuffer.length; i++) {
+    const message = logBuffer[i];
+
+    if (i === logBuffer.length - 1) {
+      process.stdout.write(trimEnd(message, '\n'));
+    } else {
+      process.stdout.write(message);
+    }
+  }
+}
+
 function runLinter(runnerOptions, write) {
   if (run) {
     const logger = {
@@ -30,21 +58,22 @@ function runLinter(runnerOptions, write) {
 
 log(chalk.cyan('[tslint-plugin] Starting linter in separate process...\n'));
 
-if (!options.files.length) {
-  log(chalk.yellow.bold('\n[tslint-plugin] Incorrect `files` argument.\n\n'));
-  process.exit();
-}
-
 const runnerOptions = Object.assign({
   exclude: [],
   format: options.format || 'webpackPluginCustom',
   formattersDirectory: path.join(__dirname, 'formatters')
 }, options);
 
-runLinter(runnerOptions, log)
+runLinter(runnerOptions, logBuffered)
   .then(() => {
-    log(chalk.green('[tslint-plugin] Linting complete.\n'));
-    process.exit();
   }).catch(error => {
     log(chalk.red(`[tslint-plugin] Error starting linter: ${error}\n${error.stack}\n`));
   });
+
+process.on('message', msg => {
+  if (msg === 'flush') {
+    log(chalk.green('[tslint-plugin] Linting complete.'));
+    flushLog();
+    process.exit();
+  }
+});
