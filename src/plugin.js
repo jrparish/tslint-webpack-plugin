@@ -89,47 +89,50 @@ function apply(options, compiler) {
   }
 
   function emitHook(compilation, callback) {
-    if (linterPromise) {
-      if (options.waitForLinting) {
+    if (linterPromise && options.waitForLinting) {
         linterPromise.then(result => {
+        for (let r of result.out) {
+          const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
+
+          if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
+            compilation.errors.push(createError(msg));
+          } else {
+            compilation.warnings.push(createError(msg));
+          }
+        }
+
+        callback();
+      });
+    } else {
+      callback();
+    }
+  }
+
+  function doneHook() {
+    const currentIteration = linterIteration;
+    
+    if (linterPromise && !options.waitForLinting) {
+      let isResolved = false;
+
+      linterPromise.then(result => {
+        isResolved = true;
+
+        // If the iterations are not the same another process has already been started and we cancel these results.
+        if (result.iteration === currentIteration) {
           for (let r of result.out) {
             const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
-  
+
             if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
-              compilation.errors.push(createError(msg));
+              process.stderr.write(chalk.red(msg + '\n'));
             } else {
-              compilation.warnings.push(createError(msg));
+              process.stdout.write(chalk.yellow(msg + '\n'));
             }
           }
-  
-          callback();
-        });
-      } else {
-        callback();
-        
-        const currentIteration = linterIteration;
-        let resolved = false;
-
-        linterPromise.then(result => {
-          resolved = true;
-
-          // If the iterations are not the same another process has already been started and we cancel these results.
-          if (result.iteration === currentIteration) {
-            for (let r of result.out) {
-              const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
-    
-              if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
-                process.stderr.write(chalk.red(msg + '\n'));
-              } else {
-                process.stdout.write(chalk.yellow(msg + '\n'));
-              }
-            }
-          }
-        });
-
-        if (!resolved) {
-          process.stdout.write(chalk.cyan(`[tslint-plugin] Waiting for results...\n`));
         }
+      });
+
+      if (!isResolved) {
+        process.stdout.write(chalk.cyan(`[tslint-plugin] Waiting for results...\n`));
       }
     }
   }
@@ -138,10 +141,12 @@ function apply(options, compiler) {
     // Webpack 4
     compiler.hooks.compile.tap('TSLintWebpackPlugin', compileHook);
     compiler.hooks.emit.tapAsync('TSLintWebpackPlugin', emitHook);
+    compiler.hooks.done.tap('TSLintWebpackPlugin', doneHook);
   } else {
     // Backwards compatibility
     compiler.plugin('compile', compileHook);
     compiler.plugin('emit', emitHook);
+    compiler.plugin('done', doneHook);
   }
 }
 
