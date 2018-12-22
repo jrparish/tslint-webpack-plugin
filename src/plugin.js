@@ -8,6 +8,9 @@ function apply(options, compiler) {
   let linterIteration = 0;
 
   function compileHook() {
+    // Use the iteration to cancel previous promises.
+    linterIteration++;
+
     if (linterProcess && linterProcess.kill) {
       // Exits any outstanding child process if one exists
       linterProcess.kill();
@@ -26,9 +29,6 @@ function apply(options, compiler) {
     linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(options)], {
       silent: true
     });
-
-    // Use the iteration to cancel previous promises.
-    linterIteration++;
 
     linterPromise = new Promise(resolve => {
       const linterOutBuffer = [];
