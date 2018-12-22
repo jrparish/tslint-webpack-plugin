@@ -24,7 +24,7 @@ function runLinter(runnerOptions, write) {
   }
 }
 
-logToParent('tsinfo:Starting linter in separate process...');
+logToParent('tsinfo:Linting started in separate process...');
 
 const runnerOptions = Object.assign({
   exclude: [],

@@ -4,7 +4,8 @@ const { fork } = require('child_process');
 
 function apply(options, compiler) {
   let linterProcess;
-  let linterOutBuffer = [];
+  let linterPromise;
+  let linterIteration = 0;
 
   function compileHook() {
     if (linterProcess && linterProcess.kill) {
@@ -22,55 +23,115 @@ function apply(options, compiler) {
     options.files = Array.isArray(files) ? files : [files];
 
     // Spawn a child process to run the linter
-    linterOutBuffer = [];
     linterProcess = fork(path.resolve(__dirname, 'linter.js'), [JSON.stringify(options)], {
       silent: true
     });
 
-    linterProcess.stdout.on('data', (message) => {
-      if (message) {
-        const msg = message.toString();
+    // Use the iteration to cancel previous promises.
+    linterIteration++;
 
-        if (msg.indexOf('tslint:') === 0) {
-          const json = JSON.parse(msg.substring(7));
+    linterPromise = new Promise(resolve => {
+      const linterOutBuffer = [];
 
-          for (let item of json) {
-            linterOutBuffer.push(item);
+      linterProcess.stdout.on('data', (message) => {
+        if (message) {
+          const msg = message.toString();
+  
+          for (let line of msg.split('\n')) {
+            const indexOfSeparator = line.indexOf(':');
+  
+            if (indexOfSeparator > 0) {
+              const type = line.substring(0, indexOfSeparator);
+              const body = line.substring(indexOfSeparator + 1);
+  
+              switch (type) {
+                case 'tslint': {
+                  const json = JSON.parse(body);
+  
+                  for (let item of json) {
+                    linterOutBuffer.push(item);
+                  }
+  
+                  break;
+                }
+                case 'tsinfo': {
+                  process.stdout.write(chalk.cyan(`[tslint-plugin] ${body}\n`));
+                  break;
+                }
+                case 'tserror': {
+                  process.stderr.write(chalk.red(`[tslint-plugin] ${body}\n`));
+                  break;
+                }
+                default: {
+                  process.stderr.write(msg);
+                }
+              }
+            } else {
+              process.stdout.write(line);
+            }
           }
-        } else if (msg.indexOf('tsinfo:') === 0) {
-          process.stdout.write(chalk.cyan(`[tslint-plugin] ${msg.substring(7)}\n`));
-        } else if (msg.indexOf('tserror:') === 0) {
-          process.stderr.write(chalk.cyan(`[tslint-plugin] ${msg.substring(8)}\n`));
-        } else {
-          process.stderr.write(msg);
         }
-      }
+      });
+
+      linterProcess.once('exit', () => {
+        resolve({ iteration: linterIteration, out: linterOutBuffer });
+  
+        // Clean up the linterProcess when finished
+        delete linterProcess;
+      });
     });
   }
 
   function createError(message) {
     const error = new Error(message);
     delete error.stackTrace;
-    return error;    
+    return error;
   }
 
   function emitHook(compilation, callback) {
-    linterProcess.once('exit', () => {
-      for (let r of linterOutBuffer) {
-        const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
+    if (linterPromise) {
+      if (options.waitForLinting) {
+        linterPromise.then(result => {
+          for (let r of result.out) {
+            const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
+  
+            if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
+              compilation.errors.push(createError(msg));
+            } else {
+              compilation.warnings.push(createError(msg));
+            }
+          }
+  
+          callback();
+        });
+      } else {
+        callback();
+        
+        const currentIteration = linterIteration;
+        let resolved = false;
 
-        if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
-          compilation.errors.push(createError(msg));
-        } else {
-          compilation.warnings.push(createError(msg));
+        linterPromise.then(result => {
+          resolved = true;
+
+          // If the iterations are not the same another process has already been started and we cancel these results.
+          if (result.iteration === currentIteration) {
+            for (let r of result.out) {
+              const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
+    
+              if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
+                process.stderr.write(chalk.red(msg + '\n'));
+              } else {
+                process.stdout.write(chalk.yellow(msg + '\n'));
+              }
+            }
+          }
+        });
+
+        if (!resolved) {
+          process.stdout.write(chalk.cyan(`[tslint-plugin] Waiting for results...\n`));
         }
       }
-
-      callback();
-
-      // Clean up the linterProcess when finished
-      delete linterProcess;
-    });
+    }
   }
 
   if (compiler.hooks) {
