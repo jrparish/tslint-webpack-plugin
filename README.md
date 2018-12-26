@@ -61,7 +61,7 @@ Disable console output if necessary:
 
 - `silent: true`
 
-Add the errors and warnings to the webpack compilation result and stats and wait for the linter to finish. This is useful when you create production builds on your build server and you do not want that tslint errors will go to production. Do not set it to true when you use webpack-dev-server because usually incremental builds are much faster than linting for large projects. 
+Add the errors and warnings to the webpack compilation result and stats and wait for the linter to finish. This is useful when you create production builds on your build server and you do not want that tslint errors will go to production. Do not set it to true when you use webpack-dev-server because usually incremental builds are much faster than linting for large projects.
 
 - `waitForLinting: true`
 
@@ -69,7 +69,7 @@ Treats all errors as warnings:
 
 - `warningsAsError: true`
 
-The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used. (**Not supported by v1.4.0 and later**)
+The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used. (**Not supported by v2 and later**)
 - `format: string`
   - Examples
     - `stylish`

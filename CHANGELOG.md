@@ -1,3 +1,8 @@
+## 2.0.0
+- The plugin waits for the linter to complete
+- The child process redirects the output to the parent as json and the parent parses the json and adds the result to the compilation object
+- The tslint should produce the results faster and warning and error handling is respected
+
 ## 1.3.0
 - Added silent option
 
