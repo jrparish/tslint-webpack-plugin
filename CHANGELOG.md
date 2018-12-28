@@ -1,3 +1,6 @@
+## 2.0.1
+- Fix typings
+
 ## 2.0.0
 - The plugin waits for the linter to complete
 - The child process redirects the output to the parent as json and the parent parses the json and adds the result to the compilation object
