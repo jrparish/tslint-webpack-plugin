@@ -5,11 +5,12 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "tslint": "5.9.1",
+    "ts-loader": "^5.3.3",
+    "tslint": "5.12.1",
     "tslint-webpack-plugin": "file:../../",
-    "typescript": "2.7.2",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^3.1.2"
+    "typescript": "3.2.2",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   },
   "scripts": {
     "test": "webpack --mode development"
