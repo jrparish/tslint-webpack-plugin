@@ -8,9 +8,8 @@ declare class TslintWebpackPlugin extends Plugin {
 }
 
 declare namespace TslintWebpackPlugin {
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/9f4c75126167d0d8af759f58405d53d983e94ad0/types/react-redux/index.d.ts#L33-L34
-    type Diff<T extends string, U extends string> = ({ [P in T]: P } & { [P in U]: never } & { [x: string]: never })[T];
-    type Omit<T, K extends keyof T> = Pick<T, Diff<keyof T, K>>;
+    // Omit taken from https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+    export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
     type OmittedOptions = {
         files: string[];
@@ -21,5 +20,8 @@ declare namespace TslintWebpackPlugin {
     interface Options extends Omit<TslintOptions, keyof OmittedOptions> {
         files: string | string[];
         exclude?: string[];
+        silent?: boolean;
+        warningsAsError?: boolean;
+        waitForLinting?: boolean;
     }
 }

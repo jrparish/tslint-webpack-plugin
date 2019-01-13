@@ -46,19 +46,31 @@ You can pass a hash of configuration options to `TSLintWebpackPlugin`.
 
 The basic configuration requires the following:
 
-- `files`: `string | string[]` The files to run through the linter.
+- `files: string | string[]` The files to run through the linter.
   - Examples
     - `'./src/**/*.ts'`
     - `['./src/**/*.ts', './test/**/*.spec.ts']`
     - `'./src/main.ts'`
     - `['./src/main.ts', './test/main.spec.ts']`
 
+- Use a custom tslint.json config
+
+- `config: ./tslint.json`
+
 Disable console output if necessary:
 
-- `silent`: `true`
+- `silent: true`
 
-The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used.
-- `format`: `string`
+Add the errors and warnings to the webpack compilation result and stats and wait for the linter to finish. This is useful when you create production builds on your build server and you do not want that tslint errors will go to production. Do not set it to true when you use webpack-dev-server because usually incremental builds are much faster than linting for large projects. 
+
+- `waitForLinting: true`
+
+Treats all errors as warnings:
+
+- `warningsAsError: true`
+
+The plugin uses a custom formatter by default, but any of the built-in TSLint formatters can be used. (**Not supported by v1.4.0 and later**)
+- `format: string`
   - Examples
     - `stylish`
     - [More supported formats](https://palantir.github.io/tslint/formatters/)

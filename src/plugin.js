@@ -33,49 +33,51 @@ function apply(options, compiler) {
     linterPromise = new Promise(resolve => {
       const linterOutBuffer = [];
 
-      linterProcess.stdout.on('data', (message) => {
-        if (message) {
-          const msg = message.toString();
-  
-          for (let line of msg.split('\n')) {
-            if (line.length === 0) {
-              continue;
-            }
+      if (!options.silent) {
+        linterProcess.stdout.on('data', (message) => {
+          if (message) {
+            const msg = message.toString();
 
-            const indexOfSeparator = line.indexOf(':');
-  
-            if (indexOfSeparator > 0) {
-              const type = line.substring(0, indexOfSeparator);
-              const body = line.substring(indexOfSeparator + 1);
-  
-              switch (type) {
-                case 'tslint': {
-                  const json = JSON.parse(body);
-  
-                  for (let item of json) {
-                    linterOutBuffer.push(item);
-                  }
-  
-                  break;
-                }
-                case 'tsinfo': {
-                  process.stdout.write(chalk.cyan(`[tslint-plugin] ${body}\n`));
-                  break;
-                }
-                case 'tserror': {
-                  process.stderr.write(chalk.red(`[tslint-plugin] ${body}\n`));
-                  break;
-                }
-                default: {
-                  process.stdout.write(msg);
-                }
+            for (let line of msg.split('\n')) {
+              if (line.length === 0) {
+                continue;
               }
-            } else {
-              process.stdout.write(line);
+              
+              const indexOfSeparator = line.indexOf(':');
+
+              if (indexOfSeparator > 0) {
+                const type = line.substring(0, indexOfSeparator);
+                const body = line.substring(indexOfSeparator + 1);
+
+                switch (type) {
+                  case 'tslint': {
+                    const json = JSON.parse(body);
+
+                    for (let item of json) {
+                      linterOutBuffer.push(item);
+                    }
+
+                    break;
+                  }
+                  case 'tsinfo': {
+                    process.stdout.write(chalk.cyan(`[tslint-plugin] ${body}\n`));
+                    break;
+                  }
+                  case 'tserror': {
+                    process.stderr.write(chalk.red(`[tslint-plugin] ${body}\n`));
+                    break;
+                  }
+                  default: {
+                    process.stdout.write(msg);
+                  }
+                }
+              } else {
+                process.stdout.write(line);
+              }
             }
           }
-        }
-      });
+        });
+      }
 
       linterProcess.once('exit', () => {
         resolve({ iteration: linterIteration, out: linterOutBuffer });
@@ -135,7 +137,7 @@ function apply(options, compiler) {
         }
       });
 
-      if (!isResolved) {
+      if (!isResolved && !options.silent) {
         process.stdout.write(chalk.cyan(`[tslint-plugin] Waiting for results...\n`));
       }
     }
