@@ -3,7 +3,7 @@ const { Runner, run } = require('tslint/lib/runner');
 const options = JSON.parse(process.argv[2]) || {};
 
 function logToParent(message) {
-  process.stdout.write(message);
+  process.stdout.write(message + '\n');
 }
 
 function runLinter(runnerOptions, write) {

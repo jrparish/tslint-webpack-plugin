@@ -38,6 +38,10 @@ function apply(options, compiler) {
           const msg = message.toString();
   
           for (let line of msg.split('\n')) {
+            if (line.length === 0) {
+              continue;
+            }
+
             const indexOfSeparator = line.indexOf(':');
   
             if (indexOfSeparator > 0) {
