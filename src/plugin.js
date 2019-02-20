@@ -51,10 +51,14 @@ function apply(options, compiler) {
 
                 switch (type) {
                   case 'tslint': {
-                    const json = JSON.parse(body);
+                    try {
+                      const json = JSON.parse(body);
 
-                    for (let item of json) {
-                      linterOutBuffer.push(item);
+                      for (let item of json) {
+                        linterOutBuffer.push(item);
+                      }
+                    } catch {
+                      process.stdout.write(chalk.red(`[tslint-plugin] Failed to parse json: ${body}\n`));
                     }
 
                     break;
