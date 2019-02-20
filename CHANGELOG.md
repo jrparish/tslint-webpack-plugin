@@ -1,3 +1,6 @@
+## 2.0.2
+- Correctly parse the logs from child process
+
 ## 2.0.1
 - Fix typings
 
