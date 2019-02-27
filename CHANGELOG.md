@@ -1,3 +1,6 @@
+## 2.0.3
+- Handle errors with json parsing
+
 ## 2.0.2
 - Correctly parse the logs from child process
 
