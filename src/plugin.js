@@ -57,7 +57,7 @@ function apply(options, compiler) {
                       for (let item of json) {
                         linterOutBuffer.push(item);
                       }
-                    } catch {
+                    } catch (e) {
                       process.stdout.write(chalk.red(`[tslint-plugin] Failed to parse json: ${body}\n`));
                     }
 
