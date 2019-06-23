@@ -16,10 +16,10 @@ function apply(options, compiler) {
       linterProcess.kill();
     }
 
-    let { files = [] } = options;
+    let { files = [], project = '' } = options;
 
-    if (!files.length) {
-      process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] No `files` option specified.\n'));
+    if (!files.length && project === '') {
+      process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] No `files` or `project` options specified.\n'));
       return;
     }
 
