@@ -1,5 +1,8 @@
+## 2.1.0
+- Allow `project` to be specified as a config option instead of `files`
+
 ## 2.0.4
-- SyntaxError: Unexpected token on error
+- Fix for SyntaxError: Unexpected token on error
 
 ## 2.0.3
 - Handle errors with json parsing
