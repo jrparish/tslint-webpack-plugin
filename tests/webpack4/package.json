@@ -6,10 +6,10 @@
   "private": true,
   "devDependencies": {
     "ts-loader": "^5.3.3",
-    "tslint": "5.12.1",
-    "tslint-webpack-plugin": "file:../../",
+    "tslint": "5.18.0",
+    "tslint-webpack-plugin": "file:../..",
     "typescript": "3.2.2",
-    "webpack": "^4.28.4",
+    "webpack": "^4.35.0",
     "webpack-cli": "^3.2.1"
   },
   "scripts": {

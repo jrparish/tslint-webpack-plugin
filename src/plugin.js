@@ -16,9 +16,9 @@ function apply(options, compiler) {
       linterProcess.kill();
     }
 
-    let { files = [], project = '' } = options;
+    let { files = [], project } = options;
 
-    if (!files.length && project === '') {
+    if (!files.length && !project) {
       process.stdout.write(chalk.yellow.bold('\n[tslint-plugin] No `files` or `project` options specified.\n'));
       return;
     }
@@ -42,7 +42,7 @@ function apply(options, compiler) {
               if (line.length === 0) {
                 continue;
               }
-              
+
               const indexOfSeparator = line.indexOf(':');
 
               if (indexOfSeparator > 0) {
@@ -85,7 +85,7 @@ function apply(options, compiler) {
 
       linterProcess.once('exit', () => {
         resolve({ iteration: linterIteration, out: linterOutBuffer });
-  
+
         // Clean up the linterProcess when finished
         delete linterProcess;
       });
@@ -120,7 +120,7 @@ function apply(options, compiler) {
 
   function doneHook() {
     const currentIteration = linterIteration;
-    
+
     if (linterPromise && !options.waitForLinting) {
       let isResolved = false;
 

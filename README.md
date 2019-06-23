@@ -44,7 +44,7 @@ Configuration
 -------------
 You can pass a hash of configuration options to `TSLintWebpackPlugin`.
 
-The basic configuration requires the following:
+The basic configuration requires the one of the following:
 
 - `files: string | string[]` The files to run through the linter.
   - Examples
@@ -53,7 +53,9 @@ The basic configuration requires the following:
     - `'./src/main.ts'`
     - `['./src/main.ts', './test/main.spec.ts']`
 
-- Use a custom tslint.json config
+- `project: string` Path to tsconfig.json
+
+Use a custom tslint.json config
 
 - `config: ./tslint.json`
 
