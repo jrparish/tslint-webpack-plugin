@@ -5,6 +5,8 @@
 
 [![NPM](https://nodei.co/npm/tslint-webpack-plugin.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/tslint-webpack-plugin/)
 
+*Due to [TSLint being deprecated](https://github.com/palantir/tslint/issues/4534), consider using/migrating to [@typescript-eslint](https://github.com/typescript-eslint/typescript-eslint)*
+
 This is a [webpack](http://webpack.github.io/) plugin that provides a very simple method of running TSLint alongside your webpack builds.
 This project differs from [tslint-loader](https://github.com/wbuchwalter/tslint-loader) in that it will lint all specified files instead of only
 those that are imported by webpack. This is especially useful for interface files that are not always picked up by webpack (due to treeshaking or whatever).
