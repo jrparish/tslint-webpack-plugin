@@ -1,3 +1,6 @@
+## 2.1.1
+- Use lowercase for ruleSeverity
+
 ## 2.1.0
 - Allow `project` to be specified as a config option instead of `files`
 
