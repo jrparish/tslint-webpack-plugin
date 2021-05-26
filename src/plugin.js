@@ -132,7 +132,7 @@ function apply(options, compiler) {
           for (let r of result.out) {
             const msg = `${r.name}:${r.startPosition.line + 1}:${r.startPosition.character + 1} [tslint] ${r.ruleName}: ${r.failure}`;
 
-            if (r.ruleSeverity === 'ERROR' || options.warningsAsError) {
+            if (r.ruleSeverity === 'error' || options.warningsAsError) {
               process.stderr.write(chalk.red(msg + '\n'));
             } else {
               process.stdout.write(chalk.yellow(msg + '\n'));
